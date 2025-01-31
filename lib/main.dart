@@ -71,81 +71,236 @@ class _SensorDataChartState extends State<SensorDataChart> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Sensor Data Chart'),
+        title: const Text('Monitoramento de Sensores'),
+        elevation: 0,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: LineChart(
-          LineChartData(
-            minX: x > 20 ? (x - 20).toDouble() : 0,
-            maxX: x.toDouble(),
-            minY: 0,
-            maxY: 100,
-            lineBarsData: [
-              LineChartBarData(
-                spots: temperatureData,
-          isCurved: true,
-                color: Colors.red,
-                dotData: FlDotData(show: false),
-                belowBarData: BarAreaData(show: false),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(8),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withValues(alpha: 0.1),
+                    spreadRadius: 1,
+                    blurRadius: 5,
+                  ),
+                ],
               ),
-              LineChartBarData(
-                spots: humidityData,
-                isCurved: true,
-                color: Colors.blue,
-                dotData: FlDotData(show: false),
-                belowBarData: BarAreaData(show: false),
-              ),
-            ],
-            gridData: FlGridData(
-              show: true,
-              drawVerticalLine: true,
-              getDrawingHorizontalLine: (value) {
-                return FlLine(
-                  color: Color(0xff37434d),
-                  strokeWidth: 1,
-                );
-              },
-              getDrawingVerticalLine: (value) {
-                return FlLine(
-                  color: Color(0xff37434d),
-                  strokeWidth: 1,
-                );
-              },
-            ),
-            titlesData: FlTitlesData(
-              bottomTitles: AxisTitles(
-                sideTitles: SideTitles(showTitles: false),
-              ),
-              leftTitles: AxisTitles(
-                sideTitles: SideTitles(
-                  showTitles: true,
-                  interval: 10,
-                  reservedSize: 28,
-                  getTitlesWidget: (value, meta) {
-                    return Text(
-                      value.toInt().toString(),
-                      style: const TextStyle(
-                        color: Color(0xff67727d),
-                        fontSize: 12,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Temperatura: ${temperatureData.isNotEmpty ? temperatureData.last.y.toStringAsFixed(1) : "0"}°C',
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blue,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  SizedBox(
+                    height: 200,
+                    child: LineChart(
+                      LineChartData(
+                        minX: x > 20 ? (x - 20).toDouble() : 0,
+                        maxX: x.toDouble(),
+                        minY: 0,
+                        maxY: 50,
+                        lineBarsData: [
+                          LineChartBarData(
+                            spots: temperatureData,
+                            isCurved: true,
+                            color: Colors.blue,
+                            dotData: const FlDotData(show: true),
+                            belowBarData: BarAreaData(
+                              show: true,
+                              gradient: LinearGradient(
+                                colors: [
+                                  Colors.blue.withValues(alpha: 0.3),
+                                  Colors.blue.withValues(alpha: 0.1),
+                                ],
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                              ),
+                            ),
+                            barWidth: 2,
+                          ),
+                        ],
+                        gridData: FlGridData(
+                          show: true,
+                          drawHorizontalLine: true,
+                          drawVerticalLine: true,
+                          getDrawingHorizontalLine: (value) => FlLine(
+                            color: Colors.grey.withValues(alpha: 0.2),
+                            strokeWidth: 1,
+                          ),
+                          getDrawingVerticalLine: (value) => FlLine(
+                            color: Colors.grey.withValues(alpha: 0.2),
+                            strokeWidth: 1,
+                          ),
+                        ),
+                        titlesData: FlTitlesData(
+                          bottomTitles: AxisTitles(
+                            sideTitles: SideTitles(
+                              showTitles: true,
+                              reservedSize: 30,
+                              interval: 5,
+                              getTitlesWidget: (value, meta) => Text(
+                                value.toInt().toString(),
+                                style: TextStyle(
+                                  color: Colors.grey.withValues(alpha: 0.7),
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ),
+                          ),
+                          leftTitles: AxisTitles(
+                            sideTitles: SideTitles(
+                              showTitles: true,
+                              reservedSize: 40,
+                              interval: 10,
+                              getTitlesWidget: (value, meta) => Text(
+                                value.toInt().toString(),
+                                style: TextStyle(
+                                  color: Colors.grey.withValues(alpha: 0.7),
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ),
+                          ),
+                          topTitles: AxisTitles(
+                            sideTitles: SideTitles(showTitles: false),
+                          ),
+                          rightTitles: AxisTitles(
+                            sideTitles: SideTitles(showTitles: false),
+                          ),
+                        ),
+                        borderData: FlBorderData(show: false),
                       ),
-                    );
-                  },
-                ),
-              ),
-              topTitles: AxisTitles(
-                sideTitles: SideTitles(showTitles: false),
-              ),
-              rightTitles: AxisTitles(
-                sideTitles: SideTitles(showTitles: false),
+                    ),
+                  ),
+                ],
               ),
             ),
-            borderData: FlBorderData(
-              show: true,
-              border: Border.all(color: const Color(0xff37434d), width: 1),
+            const SizedBox(height: 20),
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(8),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withValues(alpha: 0.1),
+                    spreadRadius: 1,
+                    blurRadius: 5,
+                  ),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Umidade: ${humidityData.isNotEmpty ? humidityData.last.y.toStringAsFixed(1) : "0"}%',
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.orange,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  SizedBox(
+                    height: 200,
+                    child: LineChart(
+                      LineChartData(
+                        minX: x > 20 ? (x - 20).toDouble() : 0,
+                        maxX: x.toDouble(),
+                        minY: 0,
+                        maxY: 100,
+                        lineBarsData: [
+                          LineChartBarData(
+                            spots: humidityData,
+                            isCurved: true,
+                            color: Colors.orange,
+                            dotData: const FlDotData(show: true),
+                            belowBarData: BarAreaData(
+                              show: true,
+                              gradient: LinearGradient(
+                                colors: [
+                                  Colors.orange.withValues(alpha: 0.3),
+                                  Colors.orange.withValues(alpha: 0.1),
+                                ],
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                              ),
+                            ),
+                            barWidth: 2,
+                          ),
+                        ],
+                        gridData: FlGridData(
+                          show: true,
+                          drawHorizontalLine: true,
+                          drawVerticalLine: true,
+                          getDrawingHorizontalLine: (value) => FlLine(
+                            color: Colors.grey.withValues(alpha: 0.2),
+                            strokeWidth: 1,
+                          ),
+                          getDrawingVerticalLine: (value) => FlLine(
+                            color: Colors.grey.withValues(alpha: 0.2),
+                            strokeWidth: 1,
+                          ),
+                        ),
+                        titlesData: FlTitlesData(
+                          bottomTitles: AxisTitles(
+                            sideTitles: SideTitles(
+                              showTitles: true,
+                              reservedSize: 30,
+                              interval: 5,
+                              getTitlesWidget: (value, meta) => Text(
+                                value.toInt().toString(),
+                                style: TextStyle(
+                                  color: Colors.grey.withValues(alpha: 0.7),
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ),
+                          ),
+                          leftTitles: AxisTitles(
+                            sideTitles: SideTitles(
+                              showTitles: true,
+                              reservedSize: 40,
+                              interval: 20,
+                              getTitlesWidget: (value, meta) => Text(
+                                value.toInt().toString(),
+                                style: TextStyle(
+                                  color: Colors.grey.withValues(alpha: 0.7),
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ),
+                          ),
+                          topTitles: AxisTitles(
+                            sideTitles: SideTitles(showTitles: false),
+                          ),
+                          rightTitles: AxisTitles(
+                            sideTitles: SideTitles(showTitles: false),
+                          ),
+                        ),
+                        borderData: FlBorderData(show: false),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );
